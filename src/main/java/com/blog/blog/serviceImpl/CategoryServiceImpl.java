@@ -1,10 +1,12 @@
 package com.blog.blog.serviceImpl;
 
+import com.blog.blog.constants.ApiConstant;
 import com.blog.blog.entity.Category;
 import com.blog.blog.entity.User;
 import com.blog.blog.exceptions.ResourceNotFoundException;
 import com.blog.blog.repository.CategoryRepo;
 import com.blog.blog.request.CategoryDto;
+import com.blog.blog.response.BlogResponse;
 import com.blog.blog.services.CategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,12 +55,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAllCategory() {
+    public BlogResponse getAllCategory() {
 
         List<Category> categories =categoryRepo.findAll();
 
        List<CategoryDto> categoryDtos= categories.stream().map(category -> this.modelMapper.map(category,CategoryDto.class)).collect(Collectors.toList());
-        return categoryDtos;
+
+        BlogResponse response=new BlogResponse();
+        response.setStatus(ApiConstant.STATUS);
+        response.setStatusCode(ApiConstant.STATUS_CODE);
+        response.setMessage("Fetch All Category!!");
+        response.setData(categoryDtos);
+
+        return response;
     }
 
     @Override

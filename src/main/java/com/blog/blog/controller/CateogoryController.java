@@ -3,6 +3,7 @@ package com.blog.blog.controller;
 
 import com.blog.blog.request.CategoryDto;
 import com.blog.blog.response.ApiResponse;
+import com.blog.blog.response.BlogResponse;
 import com.blog.blog.services.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,8 @@ public class CateogoryController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<List<CategoryDto>> getAllCategory(){
-       List<CategoryDto> list= categoryService.getAllCategory();
+    public ResponseEntity<BlogResponse> getAllCategory(){
+        BlogResponse list= categoryService.getAllCategory();
 
        return  ResponseEntity.ok(list);
     }

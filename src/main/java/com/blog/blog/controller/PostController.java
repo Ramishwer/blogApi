@@ -1,15 +1,26 @@
 package com.blog.blog.controller;
 
+import com.blog.blog.constants.ApiConstant;
 import com.blog.blog.request.CategoryDto;
 import com.blog.blog.request.PostDto;
 import com.blog.blog.response.PostResponse;
+import com.blog.blog.services.FileService;
 import com.blog.blog.services.PostService;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -18,6 +29,7 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
 
 
     @PostMapping("/user/{userId}/category/{categoryId}/posts")
@@ -45,14 +57,22 @@ public class PostController {
 
     @GetMapping("/getAllposts")
     public ResponseEntity<PostResponse> getALlPosts(
-            @RequestParam(value = "pageNumber",defaultValue = "1",required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize",defaultValue="5",required = false) Integer pageSize,
-            @RequestParam(value="sortBy",defaultValue = "postId",required = false) String sortBy,
-            @RequestParam(value = "sortDir",defaultValue = "ASC",required = false) String sortDir
+            @RequestParam(value = "pageNumber",defaultValue = ApiConstant.PAGE_NUMBER,required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize",defaultValue=ApiConstant.PAGE_SIZE,required = false) Integer pageSize,
+            @RequestParam(value="sortBy",defaultValue = ApiConstant.SORT_BY,required = false) String sortBy,
+            @RequestParam(value = "sortDir",defaultValue = ApiConstant.SORT_DIR,required = false) String sortDir
     ){
         PostResponse postDtoList= postService.getAllPost(pageNumber,pageSize,sortBy,sortDir);
 
         return new ResponseEntity<PostResponse>(postDtoList,HttpStatus.OK);
+
+    }
+
+    @GetMapping("/getallposts")
+    public ResponseEntity<List<PostDto>> getAllPostWithoutPagination(){
+        List<PostDto> postDtoList= postService.getAllPostWithoutPagination();
+
+        return new ResponseEntity<List<PostDto>>(postDtoList,HttpStatus.OK);
 
     }
 
@@ -77,4 +97,6 @@ public class PostController {
         return new ResponseEntity<List<PostDto>>(listPost, HttpStatus.OK);
 
     }
+
+
 }

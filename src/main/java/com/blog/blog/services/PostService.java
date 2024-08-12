@@ -12,7 +12,7 @@ public interface PostService {
     PostDto updatePost(PostDto postDto,Integer postId);
 
     PostResponse getAllPost(Integer pageNumber, Integer pageSize,String sortBy,String sortDir);
-
+    List<PostDto> getAllPostWithoutPagination();
     PostDto getPostById(Integer postId);
 
     PostDto deleteByPostId(Integer postId);

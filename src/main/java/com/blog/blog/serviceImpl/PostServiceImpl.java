@@ -104,6 +104,19 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
+    public  List<PostDto> getAllPostWithoutPagination() {
+
+
+        List<Post> postList=postRepo.findAll();
+         List<PostDto> postDtos=postList.stream().map(post -> this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+
+
+
+        return postDtos;
+    }
+
+
+    @Override
     public PostDto getPostById(Integer postId) {
 
         Post post=postRepo.findById(postId)

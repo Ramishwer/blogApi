@@ -1,4 +1,5 @@
-package com.blog.blog.response;
+package com.blog.blog.request;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponse {
-
-    private String message;
-
-    private boolean success;
-
+public class CommentRequest {
+    private Integer id;
+    private String content;
 
 }

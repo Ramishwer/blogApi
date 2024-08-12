@@ -12,11 +12,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CategoryDto {
 
-    private Integer categoryId;
 
+    private Integer categoryId;
 
     @NotBlank(message = "Category Title is mandatory")
     private String categoryTitle;
 
     private String categoryDescription;
+
+
 }
