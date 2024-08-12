@@ -1,6 +1,7 @@
 package com.blog.blog.services;
 
 import com.blog.blog.request.PostDto;
+import com.blog.blog.response.PostResponse;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface PostService {
 
     PostDto updatePost(PostDto postDto,Integer postId);
 
-    List<PostDto> getAllPost();
+    PostResponse getAllPost(Integer pageNumber, Integer pageSize,String sortBy,String sortDir);
 
     PostDto getPostById(Integer postId);
 
@@ -19,5 +20,7 @@ public interface PostService {
     List<PostDto> getAllPostByCategory(Integer categoryId);
 
     List<PostDto> getAllPostByUserName(Integer userId);
+
+    List<PostDto> getTitleContainingKeyword(String keyword);
 
 }

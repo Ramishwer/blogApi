@@ -8,15 +8,21 @@ import com.blog.blog.repository.CategoryRepo;
 import com.blog.blog.repository.PostRepo;
 import com.blog.blog.repository.UserRepo;
 import com.blog.blog.request.PostDto;
+import com.blog.blog.response.PostResponse;
 import com.blog.blog.services.PostService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class PostServiceImpl implements PostService {
 
@@ -67,13 +73,35 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPost() {
-        List<Post> list=postRepo.findAll();
+    public PostResponse getAllPost(Integer pageNumber, Integer pageSize,String sortBy,String sortDir) {
 
-        List<PostDto> postDtos=list.stream().map(post -> this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+        Sort sort=null;
 
-        return postDtos;
+        if(sortDir.equalsIgnoreCase("ASC")){
+            sort=Sort.by(sortBy).ascending();
+        }else {
+            sort=Sort.by(sortBy).descending();
+        }
+        log.info("sortBy:"+sort);
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize,sort);
+
+        Page<Post> pagedPosts = postRepo.findAll(pageable);
+        List<PostDto> postDtos = pagedPosts.getContent()
+                .stream()
+                .map(post -> this.modelMapper.map(post, PostDto.class))
+                .collect(Collectors.toList());
+        PostResponse postResponse=new PostResponse();
+        postResponse.setContent(postDtos);
+        postResponse.setPageNumber(pagedPosts.getNumber());
+        postResponse.setPageSize(pagedPosts.getSize());
+        postResponse.setTotalPages(pagedPosts.getTotalPages());
+        postResponse.setTotalElements(pagedPosts.getTotalElements());
+        postResponse.setLastPages(pagedPosts.isLast());
+
+        return postResponse;
     }
+
 
     @Override
     public PostDto getPostById(Integer postId) {
@@ -115,5 +143,15 @@ public class PostServiceImpl implements PostService {
 
         return postDtos;
 
+    }
+
+    @Override
+    public List<PostDto> getTitleContainingKeyword(String keyword) {
+
+        List<Post> listPost=postRepo.findByTitle(keyword);
+
+        List<PostDto> postDtos=listPost.stream().map(post -> this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+
+        return postDtos;
     }
 }
