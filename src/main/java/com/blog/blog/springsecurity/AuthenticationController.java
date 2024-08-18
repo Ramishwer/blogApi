@@ -26,7 +26,7 @@ public class AuthenticationController {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
-    
+
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -45,9 +45,9 @@ public class AuthenticationController {
 
       final String token = jwtUtil.generateToken(userDetails.getUsername());
 
-   
+
      return new AuthenticationResponse(token);
-     
+
     }
 
 }
